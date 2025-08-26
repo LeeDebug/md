@@ -1,0 +1,13 @@
+name: md
+
+services:
+  md:
+    image: doocs/md:latest
+    container_name: md
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    volumes:
+      - ../public/upload:/usr/share/nginx/html/upload
+
+
