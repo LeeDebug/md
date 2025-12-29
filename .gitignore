@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.js
 
@@ -10,6 +10,7 @@
 
 # production
 /build
+dist
 
 # misc
 .DS_Store
@@ -18,15 +19,6 @@
 .env.test.local
 .env.production.local
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-dist
-
-node_modules
-
-# Log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -57,3 +49,15 @@ components.d.ts
 .output
 web-ext.config.ts
 .wrangler
+
+# vite-plugin-pwa dev output
+dev-dist
+
+# uTools build artifacts
+apps/utools/dist
+apps/utools/release
+
+# uTools local libs (只在打包时需要，不提交到仓库)
+apps/web/public/static/libs/mathjax
+apps/web/public/static/libs/mermaid
+apps/web/public/static/libs/article-syncjs

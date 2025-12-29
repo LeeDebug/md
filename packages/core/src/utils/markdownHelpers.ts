@@ -34,33 +34,21 @@ export function postProcessHtml(baseHtml: string, reading: ReadTimeResults, rend
   // 阅读时间及字数统计
   let html = baseHtml
   html = renderer.buildReadingTime(reading) + html
-  // 去除第一行的 margin-top
-  html = html.replace(/(style=".*?)"/, `$1;margin-top: 0"`)
+  // 新主题系统：通过 CSS 去除第一行的 margin-top
+  // html = html.replace(/(style=".*?)"/, `$1;margin-top: 0"`)
   // 引用脚注
   html += renderer.buildFootnotes()
   // 附加的一些 style
   html += renderer.buildAddition()
-  if (renderer.getOpts().isMacCodeBlock) {
-    html += `
-        <style>
-          .hljs.code__pre > .mac-sign {
-            display: flex;
-          }
-        </style>
-      `
-  }
   html += `
     <style>
-      .code__pre {
-        padding: 0 !important;
+      .hljs.code__pre > .mac-sign {
+        display: ${renderer.getOpts().isMacCodeBlock ? `flex` : `none`};
       }
-
-      .hljs.code__pre code {
-        display: -webkit-box;
-        padding: 0.5em 1em 1em;
-        overflow-x: auto;
-        text-indent: 0;
-      }
+    </style>
+  `
+  html += `
+    <style>
       h2 strong {
         color: inherit !important;
       }

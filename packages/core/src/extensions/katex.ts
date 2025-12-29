@@ -9,7 +9,11 @@ const inlineRuleNonStandard = /^(\${1,2})(?!\$)((?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]
 
 const blockRule = /^\s{0,3}(\${1,2})[ \t]*\n([\s\S]+?)\n\s{0,3}\1[ \t]*(?:\n|$)/
 
-function createRenderer(display: boolean, inlineStyle: string, blockStyle: string) {
+// LaTeX style rules for \( ... \) and \[ ... \]
+const inlineLatexRule = /^\\\(([^\\]*(?:\\.[^\\]*)*?)\\\)/
+const blockLatexRule = /^\\\[([^\\]*(?:\\.[^\\]*)*?)\\\]/
+
+function createRenderer(display: boolean, withStyle: boolean = true) {
   return (token: any) => {
     // @ts-expect-error MathJax is a global variable
     window.MathJax.texReset()
@@ -19,14 +23,23 @@ function createRenderer(display: boolean, inlineStyle: string, blockStyle: strin
     const width = svg.style[`min-width`] || svg.getAttribute(`width`)
     svg.removeAttribute(`width`)
 
-    svg.style = `max-width: 300vw !important; display: initial; flex-shrink: 0;`
-    svg.style.width = width
+    // 行内公式对齐 https://groups.google.com/g/mathjax-users/c/zThKffrrCvE?pli=1
+    // 直接覆盖 style 会覆盖 MathJax 的样式，需要手动设置
+    // svg.style = `max-width: 300vw !important; display: initial; flex-shrink: 0;`
 
-    if (!display) {
-      return `<span ${inlineStyle}>${svg.outerHTML}</span>`
+    if (withStyle) {
+      svg.style.display = `initial`
+      svg.style.setProperty(`max-width`, `300vw`, `important`)
+      svg.style.flexShrink = `0`
+      svg.style.width = width
     }
 
-    return `<section ${blockStyle}>${svg.outerHTML}</section>`
+    if (!display) {
+      // 新主题系统：使用 class 而非内联样式
+      return `<span class="katex-inline">${svg.outerHTML}</span>`
+    }
+
+    return `<section class="katex-block">${svg.outerHTML}</section>`
   }
 }
 
@@ -91,11 +104,59 @@ function blockKatex(_options: MarkedKatexOptions | undefined, renderer: any) {
   }
 }
 
-export function MDKatex(options: MarkedKatexOptions | undefined, inlineStyle: string, blockStyle: string): MarkedExtension {
+function inlineLatexKatex(_options: MarkedKatexOptions | undefined, renderer: any) {
+  return {
+    name: `inlineLatexKatex`,
+    level: `inline`,
+    start(src: string) {
+      const index = src.indexOf(`\\(`)
+      return index !== -1 ? index : undefined
+    },
+    tokenizer(src: string) {
+      const match = src.match(inlineLatexRule)
+      if (match) {
+        return {
+          type: `inlineLatexKatex`,
+          raw: match[0],
+          text: match[1].trim(),
+          displayMode: false,
+        }
+      }
+    },
+    renderer,
+  }
+}
+
+function blockLatexKatex(_options: MarkedKatexOptions | undefined, renderer: any) {
+  return {
+    name: `blockLatexKatex`,
+    level: `block`,
+    start(src: string) {
+      const index = src.indexOf(`\\[`)
+      return index !== -1 ? index : undefined
+    },
+    tokenizer(src: string) {
+      const match = src.match(blockLatexRule)
+      if (match) {
+        return {
+          type: `blockLatexKatex`,
+          raw: match[0],
+          text: match[1].trim(),
+          displayMode: true,
+        }
+      }
+    },
+    renderer,
+  }
+}
+
+export function MDKatex(options: MarkedKatexOptions | undefined, withStyle: boolean = true): MarkedExtension {
   return {
     extensions: [
-      inlineKatex(options, createRenderer(false, inlineStyle, blockStyle)),
-      blockKatex(options, createRenderer(true, inlineStyle, blockStyle)),
+      inlineKatex(options, createRenderer(false, withStyle)),
+      blockKatex(options, createRenderer(true, withStyle)),
+      inlineLatexKatex(options, createRenderer(false, withStyle)),
+      blockLatexKatex(options, createRenderer(true, withStyle)),
     ],
   }
 }

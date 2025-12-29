@@ -3,9 +3,11 @@ export const storeLabels: Record<string, string> = {
   isDark: `深色模式`,
   isEditOnLeft: `左侧编辑`,
   isMacCodeBlock: `Mac 代码块`,
+  isShowLineNumber: `代码块行号`,
   isCiteStatus: `微信外链接底部引用状态`,
   isCountStatus: `字数统计状态`,
   isUseIndent: `使用缩进`,
+  isUseJustify: `使用两端对齐`,
   isOpenRightSlider: `开启右侧滑块`,
   isOpenPostSlider: `开启右侧发布滑块`,
   showAIToolbox: `AI 工具箱状态`,
@@ -29,4 +31,5 @@ export const storeLabels: Record<string, string> = {
   isShowInsertMpCardDialog: `显示插入公众号名片对话框`,
   isShowUploadImgDialog: `显示上传图片对话框`,
   aiDialogVisible: `AI 对话框可见`,
+  aiImageDialogVisible: `AI 图片生成对话框可见`,
 }
