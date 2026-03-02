@@ -11,6 +11,7 @@ export interface IOpts {
   countStatus?: boolean
   isMacCodeBlock?: boolean
   isShowLineNumber?: boolean
+  themeMode?: 'light' | 'dark'
 }
 
 export interface IConfigOption<VT = string> {
@@ -66,6 +67,7 @@ export interface PostAccount {
   uid: string
   checked: boolean
   loggedIn?: boolean
+  isChecking?: boolean
   status?: string
   error?: string
 }

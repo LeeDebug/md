@@ -33,15 +33,7 @@ function editorRefresh() {
   themeStore.updateCodeTheme()
 
   const raw = editorStore.getContent()
-  renderStore.render(raw, {
-    isCiteStatus: themeStore.isCiteStatus,
-    legend: themeStore.legend,
-    isUseIndent: themeStore.isUseIndent,
-    isUseJustify: themeStore.isUseJustify,
-    isCountStatus: themeStore.isCountStatus,
-    isMacCodeBlock: themeStore.isMacCodeBlock,
-    isShowLineNumber: themeStore.isShowLineNumber,
-  })
+  renderStore.render(raw)
 }
 
 // 对话框状态
@@ -392,9 +384,7 @@ kbd {
   font-weight: 600;
   line-height: 1;
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
-  box-shadow:
-    0 1px 0 hsl(var(--border)),
-    inset 0 0.5px 0 hsl(var(--background));
+  box-shadow: 0 1px 0 hsl(var(--border)), inset 0 0.5px 0 hsl(var(--background));
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
   letter-spacing: 0.025em;

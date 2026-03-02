@@ -28,6 +28,9 @@ export const useUIStore = defineStore(`ui`, () => {
   // 是否打开文章列表滑块
   const isOpenPostSlider = store.reactive(addPrefix(`is_open_post_slider`), false)
 
+  // 是否打开本地文件夹面板
+  const isOpenFolderPanel = store.reactive(addPrefix(`is_open_folder_panel`), false)
+
   // 是否为移动端
   const isMobile = store.reactive(`isMobile`, false)
 
@@ -38,6 +41,10 @@ export const useUIStore = defineStore(`ui`, () => {
   // 是否显示浮动目录
   const isShowFloatingToc = store.reactive(addPrefix(`isShowFloatingToc`), true)
   const toggleShowFloatingToc = useToggle(isShowFloatingToc)
+
+  // 是否启用图片转存（默认关闭）
+  const enableImageReupload = store.reactive(addPrefix(`enableImageReupload`), false)
+  const toggleImageReupload = useToggle(enableImageReupload)
 
   // ==================== 对话框状态 ====================
   // 是否展示 CSS 编辑器
@@ -55,6 +62,12 @@ export const useUIStore = defineStore(`ui`, () => {
   // 是否展示上传图片对话框
   const isShowUploadImgDialog = ref(false)
   const toggleShowUploadImgDialog = useToggle(isShowUploadImgDialog)
+
+  // 是否展示导入 Markdown 对话框
+  const isShowImportMdDialog = ref(false)
+  const toggleShowImportMdDialog = useToggle(isShowImportMdDialog)
+  /** 通过 URL 参数 open 打开时传入的待导入链接，对话框打开后会据此自动执行导入 */
+  const importMdOpenUrl = ref<string | null>(null)
 
   // 是否展示模板管理对话框
   const isShowTemplateDialog = ref(false)
@@ -112,6 +125,8 @@ export const useUIStore = defineStore(`ui`, () => {
     isMobile,
     isPinFloatingToc,
     isShowFloatingToc,
+    isOpenFolderPanel,
+    enableImageReupload,
 
     // ==================== 对话框状态 ====================
     isShowCssEditor,
@@ -122,6 +137,9 @@ export const useUIStore = defineStore(`ui`, () => {
     toggleShowInsertMpCardDialog,
     isShowUploadImgDialog,
     toggleShowUploadImgDialog,
+    isShowImportMdDialog,
+    toggleShowImportMdDialog,
+    importMdOpenUrl,
     isShowTemplateDialog,
     toggleShowTemplateDialog,
     isOpenConfirmDialog,
@@ -141,5 +159,6 @@ export const useUIStore = defineStore(`ui`, () => {
     toggleAIToolbox,
     togglePinFloatingToc,
     toggleShowFloatingToc,
+    toggleImageReupload,
   }
 })
